@@ -3,12 +3,15 @@
 </template>
 
 <script>
-import Vuex from './vuex'
-import { ref } from 'vue'
-
-const store = new Vuex.Store({})
+import { ref, inject } from 'vue'
 
 export default {
-  store
+  setup () {
+    // TODO: Using plain inject for now. Having `useStore` composition function
+    // would be more suitable I think. Or is it...?
+    const store = inject('store')
+
+    console.log(store)
+  }
 }
 </script>
