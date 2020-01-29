@@ -3,8 +3,8 @@ import Vuex from './vuex'
 import store from './store'
 import App from './App.vue'
 
-const app = createApp()
+const app = createApp(App)
 
 app.use(Vuex, store)
 
-app.mount(App, '#app')
+app.mount('#app')
