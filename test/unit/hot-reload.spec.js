@@ -257,7 +257,7 @@ describe('Hot Reload', () => {
         a: () => store.getters.count
       },
       watch: {
-        b: spy
+        a: spy
       },
       render () {}
     }).mount({ appendChild: () => {} })
