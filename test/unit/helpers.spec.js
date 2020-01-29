@@ -245,7 +245,7 @@ describe('Helpers', () => {
     expect(console.error).toHaveBeenCalledWith('[vuex] mapMutations: mapper parameter must be either an Array or an Object')
   })
 
-  it('mapGetters (array)', () => {
+  it.only('mapGetters (array)', () => {
     const store = new Vuex.Store({
       state: { count: 0 },
       mutations: {
