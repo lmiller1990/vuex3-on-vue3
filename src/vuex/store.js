@@ -185,7 +185,11 @@ export class Store {
     if (process.env.NODE_ENV !== 'production') {
       assert(typeof getter === 'function', `store.watch only accepts a function.`)
     }
-    return watch(() => getter(this.state, this.getters), cb, options)
+    return watch(() => getter(this.state, this.getters), cb, {
+      ...options,
+      flush: 'sync',
+      lazy: true
+    })
 
     // TODO: Remove the following code. Itt's just reference to the old impl.
     // return this._watcherVM.$watch(() => getter(this.state, this.getters), cb, options)
@@ -221,7 +225,9 @@ export class Store {
     this._modules.unregister(path)
     this._withCommit(() => {
       const parentState = getNestedState(this.state, path.slice(0, -1))
-      Vue.delete(parentState, path[path.length - 1])
+      delete parentState[path[path.length - 1]]
+      // TODO: Remove this code. It's just reference to the old impl.
+      // Vue.delete(parentState, path[path.length - 1])
     })
     resetStore(this)
   }
@@ -327,10 +333,13 @@ function resetStoreVM (store, state, hot) {
       // dispatch changes in all subscribed watchers
       // to force getter re-evaluation for hot reloading.
       store._withCommit(() => {
-        oldVm.data.$$state = null
+        console.log(oldVm)
+        oldVm._data.$$state = null
+        console.log(oldVm)
+        console.log(store._vm)
       })
     }
-    // TODO: I think we don't need this anymore since we'rere not using vm?
+    // TODO: I think we don't need this anymore since we're not using vm?
     // Vue.nextTick(() => oldVm.$destroy())
   }
 }
@@ -523,11 +532,11 @@ function registerGetter (store, type, rawGetter, local) {
 }
 
 function enableStrictMode (store) {
-  store._vm.$watch(function () { return this._data.$$state }, () => {
+  watch(() => store._vm._data.$$state, () => {
     if (process.env.NODE_ENV !== 'production') {
       assert(store._committing, `do not mutate vuex store state outside mutation handlers.`)
     }
-  }, { deep: true, sync: true })
+  }, { deep: true, flush: 'sync', lazy: true })
 }
 
 function getNestedState (state, path) {

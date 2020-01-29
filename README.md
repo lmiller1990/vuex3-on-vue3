@@ -13,7 +13,11 @@ Run `yarn serve` to start the application.
 
 - [x] Root State/Getters/Actions/Mutations seems working.
 - [x] Module State/Getters/Actions/Mutations seems working.
-- [ ] Watch related feature not tested.
+- [x] Watch related feature not tested.
 - [ ] Subscribe feature not tested.
 - [ ] Plugin feature not tested.
 - [ ] Not 100% sure how would the API look like on compsition api syntax (with setup()).
+
+## Testing Problem
+
+- Not able to catch error thrown inside watch with `expect(() => { store.state.a++ }).toThrow()`. This is throwing "do not mutate state" error, but it gets "[Vue warn]: Unhandled error during execution of watcher callback".

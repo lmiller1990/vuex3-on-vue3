@@ -5,4 +5,8 @@ export default function (app, store) {
 
   // TODO: Maybe we should use Symbol gor the key...?
   app.provide('store', store)
+
+  app.mixin({
+    inject: ['store']
+  })
 }
