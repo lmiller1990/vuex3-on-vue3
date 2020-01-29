@@ -1,4 +1,4 @@
-import { createApp, nextTick } from 'vue'
+import { watch, createApp, nextTick } from 'vue'
 import Vuex from 'src/vuex'
 
 const TEST = 'TEST'
@@ -253,18 +253,22 @@ describe('Hot Reload', () => {
 
     const spy = jasmine.createSpy()
     const vm = createApp({
+      setup() {
+        watch(() => store.getters.count, () => {
+          spy()
+        }, { flush: 'sync' })
+      },
       computed: {
         a: () => store.getters.count
       },
       watch: {
-        a: spy
+        // a: spy
       },
       render () {}
     }).mount({ appendChild: () => {} })
 
     expect(vm.a).toBe(0)
     store.dispatch('check', 0)
-
     store.commit('inc')
 
     expect(vm.a).toBe(1)
