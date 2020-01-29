@@ -233,7 +233,7 @@ describe('Hot Reload', () => {
     expect(store.state.list.join()).toBe('1,2,3,2,4,5')
   })
 
-  it.skip('getters', done => {
+  it('getters', done => {
     const store = new Vuex.Store({
       state: {
         count: 0
@@ -256,7 +256,8 @@ describe('Hot Reload', () => {
       setup() {
         watch(() => store.getters.count, () => {
           spy()
-        }, { flush: 'sync' })
+        // }, { flush: 'post' }) // fails
+        }, { flush: 'sync' }) // this is okay.
       },
       computed: {
         a: () => store.getters.count
