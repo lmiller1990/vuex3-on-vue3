@@ -1,4 +1,4 @@
-import { reactive, computed, toRefs } from '@vue/reactivity'
+import { reactive, computed, watch, toRefs } from 'vue'
 import applyMixin from './mixin'
 import devtoolPlugin from './plugins/devtool'
 import ModuleCollection from './module/module-collection'
@@ -39,7 +39,10 @@ export class Store {
     this._modules = new ModuleCollection(options)
     this._modulesNamespaceMap = Object.create(null)
     this._subscribers = []
+
+    // TODO: Reemove this one. We don't use it anymore.
     // this._watcherVM = new Vue()
+
     this._makeLocalGettersCache = Object.create(null)
 
     // bind commit and dispatch to self
@@ -69,10 +72,10 @@ export class Store {
     // apply plugins
     plugins.forEach(plugin => plugin(this))
 
-    // const useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools
-    // if (useDevtools) {
-    //   devtoolPlugin(this)
-    // }
+    const useDevtools = options.devtools !== undefined ? options.devtools : /* Vue.config.devtools */ true
+    if (useDevtools) {
+      devtoolPlugin(this)
+    }
   }
 
   get state () {
@@ -182,7 +185,10 @@ export class Store {
     if (process.env.NODE_ENV !== 'production') {
       assert(typeof getter === 'function', `store.watch only accepts a function.`)
     }
-    return this._watcherVM.$watch(() => getter(this.state, this.getters), cb, options)
+    return watch(() => getter(this.state, this.getters), cb, options)
+
+    // TODO: Remove the following code. Itt's just reference to the old impl.
+    // return this._watcherVM.$watch(() => getter(this.state, this.getters), cb, options)
   }
 
   replaceState (state) {
@@ -316,16 +322,17 @@ function resetStoreVM (store, state, hot) {
     enableStrictMode(store)
   }
 
-  // if (oldVm) {
-  //   if (hot) {
-  //     // dispatch changes in all subscribed watchers
-  //     // to force getter re-evaluation for hot reloading.
-  //     store._withCommit(() => {
-  //       oldVm.data.$$state = null
-  //     })
-  //   }
-  //   Vue.nextTick(() => oldVm.$destroy())
-  // }
+  if (oldVm) {
+    if (hot) {
+      // dispatch changes in all subscribed watchers
+      // to force getter re-evaluation for hot reloading.
+      store._withCommit(() => {
+        oldVm.data.$$state = null
+      })
+    }
+    // TODO: I think we don't need this anymore since we'rere not using vm?
+    // Vue.nextTick(() => oldVm.$destroy())
+  }
 }
 
 function installModule (store, rootState, path, module, hot) {

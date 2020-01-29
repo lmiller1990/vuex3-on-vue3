@@ -7,4 +7,8 @@ const app = createApp(App)
 
 app.use(Vuex, store)
 
+store.watch(state => state.count, () => {
+  console.log('Watching!')
+})
+
 app.mount('#app')
