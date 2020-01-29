@@ -34,9 +34,16 @@ const store = new Vuex.Store({
   modules: {
     moduleA: {
       namespaced: true,
+
       state () {
         return {
           value: 'Module A Value'
+        }
+      },
+
+      getters: {
+        valuePlus (state) {
+          return state.value +  ' Plus!'
         }
       },
 

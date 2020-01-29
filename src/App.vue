@@ -7,7 +7,7 @@
 
   <hr>
 
-  <p>store.state.moduleA.value: {{ moduleAValue }}</p>
+  <p>store.state.moduleA.value: {{ moduleAValue }}, plus: {{ moduleAValuePlus }}</p>
   <button @click="change">CHANGE VALUE</button>
   <button @click="reset">RESET</button>
 </template>
@@ -38,6 +38,10 @@ export default {
 
     moduleAValue () {
       return this.store.state.moduleA.value
+    },
+
+    moduleAValuePlus () {
+      return this.store.getters['moduleA/valuePlus']
     }
   },
 
