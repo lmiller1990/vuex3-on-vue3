@@ -245,7 +245,7 @@ describe('Helpers', () => {
     expect(console.error).toHaveBeenCalledWith('[vuex] mapMutations: mapper parameter must be either an Array or an Object')
   })
 
-  it.only('mapGetters (array)', () => {
+  it('mapGetters (array)', () => {
     const store = new Vuex.Store({
       state: { count: 0 },
       mutations: {
@@ -256,7 +256,7 @@ describe('Helpers', () => {
         hasAny: ({ count }) => count > 0,
         negative: ({ count }) => count < 0
       }
-    }, store)
+    })
     const vm = mount({
       computed: mapGetters(['hasAny', 'negative'])
     }, store)
@@ -423,7 +423,7 @@ describe('Helpers', () => {
     })
     const vm = mount({
       methods: mapActions(['a', 'b'])
-    })
+    }, store)
     vm.a()
     expect(a).toHaveBeenCalled()
     expect(b).not.toHaveBeenCalled()
@@ -445,7 +445,7 @@ describe('Helpers', () => {
         foo: 'a',
         bar: 'b'
       })
-    })
+    }, store)
     vm.foo()
     expect(a).toHaveBeenCalled()
     expect(b).not.toHaveBeenCalled()
@@ -464,7 +464,7 @@ describe('Helpers', () => {
           dispatch('a', arg + 'bar')
         }
       })
-    })
+    }, store)
     vm.foo('foo')
     expect(a.calls.argsFor(0)[1]).toBe('foobar')
   })
@@ -488,7 +488,7 @@ describe('Helpers', () => {
         foo: 'a',
         bar: 'b'
       })
-    })
+    }, store)
     vm.foo()
     expect(a).toHaveBeenCalled()
     expect(b).not.toHaveBeenCalled()
@@ -512,7 +512,7 @@ describe('Helpers', () => {
           dispatch('a', arg + 'bar')
         }
       })
-    })
+    }, store)
     vm.foo('foo')
     expect(a.calls.argsFor(0)[1]).toBe('foobar')
   })
@@ -532,7 +532,7 @@ describe('Helpers', () => {
     })
     const vm = mount({
       methods: mapActions('foo/')
-    })
+    }, store)
     expect(vm.a).toBeUndefined()
     expect(a).not.toHaveBeenCalled()
     expect(console.error).toHaveBeenCalledWith('[vuex] mapActions: mapper parameter must be either an Array or an Object')
@@ -575,7 +575,7 @@ describe('Helpers', () => {
         ...mapMutations(['inc', 'dec']),
         ...mapActions(['actionA', 'actionB'])
       }
-    })
+    }, store)
     expect(vm.count).toBe(0)
     expect(vm.isEven).toBe(true)
     store.state.foo.count++

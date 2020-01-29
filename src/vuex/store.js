@@ -333,10 +333,7 @@ function resetStoreVM (store, state, hot) {
       // dispatch changes in all subscribed watchers
       // to force getter re-evaluation for hot reloading.
       store._withCommit(() => {
-        console.log(oldVm)
         oldVm._data.$$state = null
-        console.log(oldVm)
-        console.log(store._vm)
       })
     }
     // TODO: I think we don't need this anymore since we're not using vm?
